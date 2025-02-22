@@ -6,10 +6,10 @@ pool:
 
 variables:
 
-  azureSubscription: 'service-connection-s9'
-  location: 'eastus2'
-  resourceGroupName: 'grupo-recursos-s9'
-
+  azureSubscription: 'service-connection-s9' # Este es un nombre que debe cambiar al que crearon.
+  location: 'eastus2' 
+  resourceGroupName: 'grupo-recursos-s9' # Este es un nombre que debe cambiar al que crearon.
+  
   virtualNetworkName: 'VNet-Curso_DevOps-s9'
   subnetName: 'Subnet-Curso_DevOps-s9'
   addressPrefix: '10.0.0.0/16'
@@ -22,7 +22,7 @@ variables:
   adminUsername: 'azureusers9'
   adminPassword: 'Password1234$s9'
 
-  # Variables de la imagen
+
   imagePublisher: 'Canonical'
   imageOffer: '0001-com-ubuntu-server-jammy'
   imageSku: '22_04-lts-gen2'
@@ -35,7 +35,9 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      set -e
+      set -e  # Termina el script si cualquier comando falla
+
+      # az account set --subscription "47cf5b83-0b7f-4ff7-b5fb-6e338131eef2"
 
       echo "Creando grupo de recursos..."
       az group create --name $(resourceGroupName) --location "$(location)"
@@ -67,3 +69,8 @@ steps:
       az vm create --resource-group $(resourceGroupName) --name $(vmName) --image $(imagePublisher):$(imageOffer):$(imageSku):$(imageVersion) --size $(vmSize) --admin-username $(adminUsername) --admin-password $(adminPassword) --vnet-name $(virtualNetworkName) --subnet $(subnetName) --nsg $(securityGroupName) --public-ip-address $(publicIpName)
       echo "Máquina virtual creada."
       az vm wait --resource-group $(resourceGroupName) --name $(vmName) --created
+
+      echo "Instalando Apache y configurando la página de prueba..."
+      az vm run-command invoke --resource-group $(resourceGroupName) --name $(vmName) --command-id RunShellScript --scripts "sudo apt update && sudo apt install -y apache2"
+      az vm run-command invoke --resource-group $(resourceGroupName) --name $(vmName) --command-id RunShellScript --scripts "echo 'hola curso devops hemos automatizado el despliegue de maquina virtual desde azure devops' | sudo tee /var/www/html/index.html"
+      echo "Apache instalado y página de bienvenida configurada."
