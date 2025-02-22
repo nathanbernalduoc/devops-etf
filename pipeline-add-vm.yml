@@ -19,7 +19,7 @@ variables:
   vmName: 'VM-CursoDevOps-s9'
 
   vmSize: 'Standard_D4s_v3'
-  adminUsername: 'azureusers9'
+  adminUsername: 'azureuser'
   adminPassword: 'Password1234$s9'
 
 
