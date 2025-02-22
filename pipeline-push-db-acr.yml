@@ -5,9 +5,9 @@ trigger:
 
 variables:
   # Variables de entorno
-  ACR_NAME: 'databaseregistro'
-  IMAGE_NAME: 'databaseregistro'
-  SERVICE_CONNECTION_NAME: 'databaseregistro'
+  ACR_NAME: 'databaseRegistro'
+  IMAGE_NAME: 'databaseRegistro'
+  SERVICE_CONNECTION_NAME: 'service-connection-s9-etf'
 
 jobs:
   - job: BuildAndPush
