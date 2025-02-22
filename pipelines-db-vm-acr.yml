@@ -65,27 +65,7 @@ stages:
                 - script: |
                     # Autenticarse en Azure Container Registry utilizando nombre de usuario y contraseña
                     echo "Autenticándose en Azure Container Registry y ejecutando la imagen Docker..."
-                    echo ${ACR_PASSWORD} | sudo docker login ${ACR_NAME}.azurecr.io -u ${ACR_USERNAME} -p ${ACR_PASSWORD} 2>/dev/null
 
-                    
-                    # Descargar la imagen desde ACR
-                    sudo docker pull ${ACR_NAME}.azurecr.io/${ACR_NAME}.azurecr.io/${IMAGE_NAME}:latest
-
-                    # Verificar si el contenedor MySQL ya está en ejecución
-                    if sudo docker ps -a --format '{{.Names}}' | grep -Eq "^mysql_container\$"; then
-                      echo "El contenedor 'mysql_container' ya existe. Iniciándolo nuevamente..."
-                      sudo docker start mysql_container
-                    else
-                      echo "El contenedor 'mysql_container' no existe. Creándolo y ejecutándolo..."
-                      sudo docker run -d -p 3306:3306 --name mysql_container \
-                        -e MYSQL_ROOT_PASSWORD=Password123 \
-                        -e MYSQL_DATABASE=testing_database \
-                        -e MYSQL_USER=mysqluser \
-                        -e MYSQL_PASSWORD=contrasena%123 \
-                        ${ACR_NAME}.azurecr.io/${ACR_NAME}.azurecr.io/${IMAGE_NAME}:latest
-                    fi
-
-                    sudo docker ps
                   displayName: 'Descargar y ejecutar la imagen MySQL desde ACR'
                   failOnStderr: true
 
