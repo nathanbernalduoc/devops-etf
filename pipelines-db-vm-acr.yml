@@ -16,7 +16,7 @@ stages:
       - deployment: DeployVM
         displayName: 'Deploy Base de datos to Máquina virtual'
         environment:
-          name: 'vm-docker-database' 
+          name: 'service-connection-databaseRegistro' 
           resourceType: VirtualMachine 
         strategy:
           runOnce:
