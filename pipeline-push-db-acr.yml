@@ -1,0 +1,25 @@
+trigger:
+  branches:
+    include:
+      - main
+
+variables:
+  # Variables de entorno
+  ACR_NAME: 'databaseRegistro'
+  IMAGE_NAME: 'databaseRegistro'
+  SERVICE_CONNECTION_NAME: 'databaseRegistro'
+
+jobs:
+  - job: BuildAndPush
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: Docker@2
+        inputs:
+          command: 'buildAndPush'
+          containerRegistry: '$(SERVICE_CONNECTION_NAME)'
+          repository: '$(ACR_NAME).azurecr.io/$(IMAGE_NAME)'
+          dockerfile: '**/Dockerfile'
+          tags: |
+            latest
+        displayName: 'Build and Push Docker Image ACR'
