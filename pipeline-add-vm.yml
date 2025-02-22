@@ -1,0 +1,69 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+
+  azureSubscription: 'service-connection-s9'
+  location: 'eastus2'
+  resourceGroupName: 'grupo-recursos-s9'
+
+  virtualNetworkName: 'VNet-Curso_DevOps-s9'
+  subnetName: 'Subnet-Curso_DevOps-s9'
+  addressPrefix: '10.0.0.0/16'
+  subnetPrefix: '10.0.1.0/24'
+  securityGroupName: 'NSG-Curso_DevOps-s9'
+  publicIpName: 'PublicIP-Curso_DevOps-s9'
+  vmName: 'VM-Curso_DevOps-s9'
+
+  vmSize: 'Standard_D4s_v3'
+  adminUsername: 'azureusers9'
+  adminPassword: 'Password1234$s9'
+
+  # Variables de la imagen
+  imagePublisher: 'Canonical'
+  imageOffer: '0001-com-ubuntu-server-jammy'
+  imageSku: '22_04-lts-gen2'
+  imageVersion: 'latest'
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: $(azureSubscription)
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      set -e
+
+      echo "Creando grupo de recursos..."
+      az group create --name $(resourceGroupName) --location "$(location)"
+      echo "Grupo de recursos creado."
+
+      echo "Creando red virtual..."
+      az network vnet create --resource-group $(resourceGroupName) --name $(virtualNetworkName) --address-prefix $(addressPrefix) --subnet-name $(subnetName) --subnet-prefix $(subnetPrefix)
+      echo "Red virtual creada."
+      az network vnet wait --resource-group $(resourceGroupName) --name $(virtualNetworkName) --created
+
+      echo "Creando grupo de seguridad de red..."
+      az network nsg create --resource-group $(resourceGroupName) --name $(securityGroupName)
+      echo "Grupo de seguridad de red creado."
+      az network nsg wait --resource-group $(resourceGroupName) --name $(securityGroupName) --created
+
+      echo "Configurando reglas de NSG..."
+      az network nsg rule create --resource-group $(resourceGroupName) --nsg-name $(securityGroupName) --name AllowSSH --protocol tcp --direction inbound --priority 1000 --source-address-prefix '*' --source-port-range '*' --destination-address-prefix '*' --destination-port-range 22 --access allow
+      az network nsg rule create --resource-group $(resourceGroupName) --nsg-name $(securityGroupName) --name AllowHTTP --protocol tcp --direction inbound --priority 1001 --source-address-prefix '*' --source-port-range '*' --destination-address-prefix '*' --destination-port-range 80 --access allow
+      az network nsg rule create --resource-group $(resourceGroupName) --nsg-name $(securityGroupName) --name AllowICMP --protocol icmp --direction inbound --priority 1002 --source-address-prefix '*' --source-port-range '*' --destination-address-prefix '*' --destination-port-range '*' --access allow
+
+      echo "Reglas de NSG configuradas."
+
+      echo "Creando IP pública..."
+      az network public-ip create --resource-group $(resourceGroupName) --name $(publicIpName) --sku Standard --allocation-method Static
+      echo "IP pública creada."
+      az network public-ip wait --resource-group $(resourceGroupName) --name $(publicIpName) --created
+
+      echo "Creando máquina virtual..."
+      az vm create --resource-group $(resourceGroupName) --name $(vmName) --image $(imagePublisher):$(imageOffer):$(imageSku):$(imageVersion) --size $(vmSize) --admin-username $(adminUsername) --admin-password $(adminPassword) --vnet-name $(virtualNetworkName) --subnet $(subnetName) --nsg $(securityGroupName) --public-ip-address $(publicIpName)
+      echo "Máquina virtual creada."
+      az vm wait --resource-group $(resourceGroupName) --name $(vmName) --created
