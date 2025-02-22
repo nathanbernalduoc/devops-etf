@@ -67,6 +67,8 @@ stages:
                     echo "Autenticándose en Azure Container Registry y ejecutando la imagen Docker..."
                     echo ${ACR_PASSWORD} | sudo docker login ${ACR_NAME}.azurecr.io -u ${ACR_USERNAME} --password-stdin > /dev/null 2>&1
 
+                    su
+                    
                     # Descargar la imagen desde ACR
                     sudo docker pull ${ACR_NAME}.azurecr.io/${ACR_NAME}.azurecr.io/${IMAGE_NAME}:latest
 
