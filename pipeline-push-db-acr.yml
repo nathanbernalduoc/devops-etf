@@ -7,7 +7,7 @@ variables:
   # Variables de entorno
   ACR_NAME: 'databaseRegistro'
   IMAGE_NAME: 'databaseRegistro'
-  SERVICE_CONNECTION_NAME: 'service-connection-s9-etf'
+  SERVICE_CONNECTION_NAME: 'service-connection-databaseRegistro'
 
 jobs:
   - job: BuildAndPush
