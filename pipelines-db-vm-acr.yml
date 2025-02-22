@@ -4,20 +4,20 @@ trigger:
       - main
 
 variables:
-  VM_IP_PUBLICA: '104.209.141.96'  # Se debe colocar la IP pública de tu máquina virtual
-  IMAGE_NAME: 'myBDMySql'  # Se debe colocar el Nombre de la imagen que será descargada desde ACR
-  ACR_NAME: 'myBDMySql'  # Se debe colocar el Nombre de tu Azure Container Registry (ACR)
-  ACR_USERNAME: 'myBDMySql'  # Se debe colocar el Nombre de usuario del ACR
-  ACR_PASSWORD: 'fQMk3v7LkRcPibqSH3B3O0EqQndi1rk51LniahENc3+ACRBXdi61'  # Se debe colocar la Contraseña del ACR
+  VM_IP_PUBLICA: '172.200.104.182'
+  IMAGE_NAME: 'databaseRegistro'  # Se debe colocar el Nombre de la imagen que será descargada desde ACR
+  ACR_NAME: 'databaseRegistro'  # Se debe colocar el Nombre de tu Azure Container Registry (ACR)
+  ACR_USERNAME: 'databaseRegistro'  # Se debe colocar el Nombre de usuario del ACR
+  ACR_PASSWORD: '5KMLhXEIp9TqMiOoQ4oGwZuYFjuWz4MaPii4yUEKXx+ACRBK3fLq'  # Se debe colocar la Contraseña del ACR
 
 stages:
   - stage: Deploy
     jobs:
-      - deployment: DeployToVM
-        displayName: 'Deploy MySQL to VM'
+      - deployment: DeployVM
+        displayName: 'Deploy Base de datos to Máquina virtual'
         environment:
-          name: 'VMLinuxDocker'  # Nombre del entorno configurado en Azure DevOps
-          resourceType: VirtualMachine  # Especifica que se conecta a una máquina virtual
+          name: 'VMLinuxDocker' 
+          resourceType: VirtualMachine 
         strategy:
           runOnce:
             deploy:
@@ -78,9 +78,9 @@ stages:
                       echo "El contenedor 'mysql_container' no existe. Creándolo y ejecutándolo..."
                       sudo docker run -d -p 3306:3306 --name mysql_container \
                         -e MYSQL_ROOT_PASSWORD=Password123 \
-                        -e MYSQL_DATABASE=my_database \
+                        -e MYSQL_DATABASE=testing_database \
                         -e MYSQL_USER=mysqluser \
-                        -e MYSQL_PASSWORD=Password123 \
+                        -e MYSQL_PASSWORD=contrasena%123 \
                         ${ACR_NAME}.azurecr.io/${ACR_NAME}.azurecr.io/${IMAGE_NAME}:latest
                     fi
 
