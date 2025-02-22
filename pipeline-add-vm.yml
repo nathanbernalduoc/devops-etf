@@ -6,7 +6,7 @@ pool:
 
 variables:
 
-  azureSubscription: 'service-connection-s9'
+  azureSubscription: 'e49abde6-045e-415c-9641-02f4e9c8b020'
   location: 'eastus2' 
   resourceGroupName: 'grupo-recursos-s9'
   
