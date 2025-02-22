@@ -10,13 +10,13 @@ variables:
   location: 'eastus2' 
   resourceGroupName: 'grupo-recursos-s9-etf' # Este es un nombre que debe cambiar al que crearon.
   
-  virtualNetworkName: 'VNet-Curso_DevOps-s9'
-  subnetName: 'Subnet-Curso_DevOps-s9'
+  virtualNetworkName: 'VNet-CursoDevOps-s9'
+  subnetName: 'Subnet-CursoDevOps-s9'
   addressPrefix: '10.0.0.0/16'
   subnetPrefix: '10.0.1.0/24'
-  securityGroupName: 'NSG-Curso_DevOps-s9'
-  publicIpName: 'PublicIP-Curso_DevOps-s9'
-  vmName: 'VM-Curso_DevOps-s9'
+  securityGroupName: 'NSG-CursoDevOps-s9'
+  publicIpName: 'PublicIP-CursoDevOps-s9'
+  vmName: 'VM-CursoDevOps-s9'
 
   vmSize: 'Standard_D4s_v3'
   adminUsername: 'azureusers9'
