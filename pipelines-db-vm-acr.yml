@@ -16,7 +16,7 @@ stages:
       - deployment: DeployVM
         displayName: 'Deploy Base de datos to Máquina virtual'
         environment:
-          name: 'service-connection-databaseRegistro' 
+          name: 'vm-environment-etf' 
           resourceType: VirtualMachine 
         strategy:
           runOnce:
