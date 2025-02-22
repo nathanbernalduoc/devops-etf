@@ -6,9 +6,9 @@ pool:
 
 variables:
 
-  azureSubscription: 'service-connection-s9'
+  azureSubscription: 'service-connection-s9-etf'
   location: 'eastus2' 
-  resourceGroupName: 'grupo-recursos-s9' # Este es un nombre que debe cambiar al que crearon.
+  resourceGroupName: 'grupo-recursos-s9-etf' # Este es un nombre que debe cambiar al que crearon.
   
   virtualNetworkName: 'VNet-Curso_DevOps-s9'
   subnetName: 'Subnet-Curso_DevOps-s9'
